@@ -1,3 +1,5 @@
+import { EmailSenderEntity } from '../entities/emailSender.entity'
+
 export interface EmailSenderUseCase {
-  sendEmail(to: string, subject: string, body: string): void
+  sendEmail(emailSenderEntity: EmailSenderEntity): void
 }
