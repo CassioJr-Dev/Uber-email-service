@@ -1,13 +1,15 @@
 import { EmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
-import { EmailServiceException } from '@/email-service/domain/errors/emailServiceException.error'
+import { EmailServiceError } from '@/email-service/domain/errors/email-service.error'
 import {
   SendEmailCommand,
   SendEmailRequest,
   SESClient,
 } from '@aws-sdk/client-ses'
+import { Injectable } from '@nestjs/common'
 
-export class SesEmailSender implements EmailSenderGateway {
-  constructor(private readonly client: SESClient) {}
+@Injectable()
+export class SESEmailSender implements EmailSenderGateway {
+  constructor(private readonly sesClient: SESClient) {}
 
   async sendEmail(to: string, subject: string, body: string): Promise<void> {
     try {
@@ -18,10 +20,6 @@ export class SesEmailSender implements EmailSenderGateway {
         },
         Message: {
           Body: {
-            Html: {
-              Charset: 'UTF-8',
-              Data: 'HTML_FORMAT_BODY',
-            },
             Text: {
               Charset: 'UTF-8',
               Data: body,
@@ -35,10 +33,9 @@ export class SesEmailSender implements EmailSenderGateway {
       }
 
       const sendEmailCommand = new SendEmailCommand(request)
-      const response = await this.client.send(sendEmailCommand)
-      console.log(response)
+      await this.sesClient.send(sendEmailCommand)
     } catch (error) {
-      throw new EmailServiceException('Failure while sending email', error)
+      throw new EmailServiceError('Failure while sending email', error)
     }
   }
 }
