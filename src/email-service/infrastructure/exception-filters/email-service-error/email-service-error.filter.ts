@@ -11,7 +11,6 @@ export class EmailServiceFilter implements ExceptionFilter {
       name: exception.name,
       statusCode: exception.status,
       message: exception.message,
-      error: exception.error,
     })
   }
 }
