@@ -13,7 +13,7 @@ export class SESEmailSender implements EmailSenderGateway {
 
   async sendEmail(to: string, subject: string, body: string): Promise<void> {
     try {
-      const request: SendEmailRequest = {
+      const emailInput: SendEmailRequest = {
         Source: process.env.EMAIL_SOURCE,
         Destination: {
           ToAddresses: [to],
@@ -32,7 +32,7 @@ export class SESEmailSender implements EmailSenderGateway {
         },
       }
 
-      const sendEmailCommand = new SendEmailCommand(request)
+      const sendEmailCommand = new SendEmailCommand(emailInput)
       await this.sesClient.send(sendEmailCommand)
     } catch (error) {
       throw new EmailServiceError('Failure while sending email')

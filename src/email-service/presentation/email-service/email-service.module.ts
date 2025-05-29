@@ -4,10 +4,13 @@ import { SESClient } from '@aws-sdk/client-ses'
 import { SESEmailSender } from '@/email-service/infrastructure/ses/sesEmailSender'
 import { EmailSenderService } from '@/email-service/application/service/emailSender.service'
 import { EmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
+import { SendGridEmailSender } from '@/email-service/infrastructure/sendGrid/sendGridEmailSender'
+import sendGridMail, { MailService } from '@sendgrid/mail'
 
 @Module({
   providers: [
     SESEmailSender,
+    SendGridEmailSender,
     {
       provide: SESClient,
       useFactory: () => {
@@ -21,11 +24,18 @@ import { EmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.
       },
     },
     {
+      provide: MailService,
+      useFactory: () => {
+        sendGridMail.setApiKey(process.env.SENDGRID_SECRET_ACCESS_KEY)
+        return sendGridMail
+      },
+    },
+    {
       provide: EmailSenderService,
       useFactory: (emailSenderGateway: EmailSenderGateway) => {
         return new EmailSenderService(emailSenderGateway)
       },
-      inject: [SESEmailSender],
+      inject: [SendGridEmailSender],
     },
   ],
   controllers: [EmailServiceController],
