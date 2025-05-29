@@ -1,11 +1,11 @@
 import { EmailSenderDto } from '@/email-service/dtos/email-sender.dto'
-import { SESEmailSender } from '../../sesEmailSender'
 import { EmailServiceError } from '@/email-service/domain/errors/email-service.error'
+import { SendGridEmailSender } from '../../sendGridEmailSender'
 
-describe('SESEmailSender unit tests', () => {
+describe('SendGridEmailSender unit tests', () => {
   let props: EmailSenderDto
-  let sut: SESEmailSender
-  let sesClientMock: any
+  let sut: SendGridEmailSender
+  let sendGridClientMock: any
 
   beforeEach(() => {
     props = {
@@ -14,24 +14,24 @@ describe('SESEmailSender unit tests', () => {
       body: 'email sent successfully',
     }
 
-    sesClientMock = {
+    sendGridClientMock = {
       send: jest.fn(),
     }
 
-    sut = new SESEmailSender(sesClientMock)
+    sut = new SendGridEmailSender(sendGridClientMock)
   })
 
-  it('should call sendEmail with SES', async () => {
+  it('should call sendEmail with SendGrid', async () => {
     await sut.sendEmail(props.to, props.subject, props.body)
-    expect(sesClientMock.send).toHaveBeenCalled()
+    expect(sendGridClientMock.send).toHaveBeenCalled()
   })
 
-  it('should throw EmailServiceError when SES fails', async () => {
-    sesClientMock = {
+  it('should throw EmailServiceError when SendGrid fails', async () => {
+    sendGridClientMock = {
       send: jest.fn().mockRejectedValue(new Error('Erro simulado no SES')),
     }
 
-    sut = new SESEmailSender(sesClientMock)
+    sut = new SendGridEmailSender(sendGridClientMock)
 
     await expect(
       sut.sendEmail(props.to, props.subject, props.body),
