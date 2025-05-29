@@ -3,9 +3,10 @@ import { EmailServiceController } from './email-service.controller'
 import { SESClient } from '@aws-sdk/client-ses'
 import { SESEmailSender } from '@/email-service/infrastructure/ses/sesEmailSender'
 import { EmailSenderService } from '@/email-service/application/service/emailSender.service'
-import { EmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
+import { IEmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
 import { SendGridEmailSender } from '@/email-service/infrastructure/sendGrid/sendGridEmailSender'
 import sendGridMail, { MailService } from '@sendgrid/mail'
+import { FallbackEmailSender } from '@/email-service/infrastructure/fallback/fallbackEmailSender'
 
 @Module({
   providers: [
@@ -31,11 +32,18 @@ import sendGridMail, { MailService } from '@sendgrid/mail'
       },
     },
     {
+      provide: FallbackEmailSender,
+      useFactory: (awsSes: SESEmailSender, sendGrid: SendGridEmailSender) => {
+        return new FallbackEmailSender([awsSes, sendGrid])
+      },
+      inject: [SESEmailSender, SendGridEmailSender],
+    },
+    {
       provide: EmailSenderService,
-      useFactory: (emailSenderGateway: EmailSenderGateway) => {
+      useFactory: (emailSenderGateway: IEmailSenderGateway) => {
         return new EmailSenderService(emailSenderGateway)
       },
-      inject: [SendGridEmailSender],
+      inject: [FallbackEmailSender],
     },
   ],
   controllers: [EmailServiceController],

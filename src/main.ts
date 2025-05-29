@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { EmailServiceFilter } from './email-service/infrastructure/exception-filters/email-service-error/email-service-error.filter'
+import { EmailServiceUnavailableFilter } from './email-service/infrastructure/exception-filters/email-service-error/email-service-error.filter'
 import { ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
@@ -13,7 +13,7 @@ async function bootstrap() {
       transform: true,
     }),
   )
-  app.useGlobalFilters(new EmailServiceFilter())
+  app.useGlobalFilters(new EmailServiceUnavailableFilter())
   await app.listen(process.env.PORT ?? 3000)
 }
 bootstrap()

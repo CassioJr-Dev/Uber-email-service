@@ -1,9 +1,9 @@
-import { EmailServiceError } from '@/email-service/domain/errors/email-service.error'
+import { EmailServiceUnavailableError } from '@/email-service/domain/errors/email-service-unavailable/email-service-unavailable.error'
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 
-@Catch(EmailServiceError)
-export class EmailServiceFilter implements ExceptionFilter {
-  catch(exception: EmailServiceError, host: ArgumentsHost) {
+@Catch(EmailServiceUnavailableError)
+export class EmailServiceUnavailableFilter implements ExceptionFilter {
+  catch(exception: EmailServiceUnavailableError, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse()
 

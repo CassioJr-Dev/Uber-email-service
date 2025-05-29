@@ -1,5 +1,5 @@
-import { EmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
-import { EmailServiceError } from '@/email-service/domain/errors/email-service.error'
+import { IEmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
+import { EmailServiceError } from '@/email-service/domain/errors/email-service-error/email-service.error'
 import {
   SendEmailCommand,
   SendEmailRequest,
@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class SESEmailSender implements EmailSenderGateway {
+export class SESEmailSender implements IEmailSenderGateway {
   constructor(private readonly sesClient: SESClient) {}
 
   async sendEmail(to: string, subject: string, body: string): Promise<void> {

@@ -1,5 +1,5 @@
 import { EmailSenderDto } from '@/email-service/dtos/email-sender.dto'
-import { EmailServiceError } from '@/email-service/domain/errors/email-service.error'
+import { EmailServiceError } from '@/email-service/domain/errors/email-service-error/email-service.error'
 import { SendGridEmailSender } from '../../sendGridEmailSender'
 
 describe('SendGridEmailSender unit tests', () => {

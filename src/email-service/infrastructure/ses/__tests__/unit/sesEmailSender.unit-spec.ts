@@ -1,6 +1,6 @@
 import { EmailSenderDto } from '@/email-service/dtos/email-sender.dto'
 import { SESEmailSender } from '../../sesEmailSender'
-import { EmailServiceError } from '@/email-service/domain/errors/email-service.error'
+import { EmailServiceError } from '@/email-service/domain/errors/email-service-error/email-service.error'
 
 describe('SESEmailSender unit tests', () => {
   let props: EmailSenderDto
