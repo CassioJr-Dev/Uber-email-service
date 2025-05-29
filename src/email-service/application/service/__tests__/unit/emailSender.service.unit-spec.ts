@@ -21,8 +21,8 @@ describe('EmailSenderService unit tests', () => {
     sut = new EmailSenderService(mailerServiceMock)
   })
 
-  it('should call sendEmail on the gateway when sending an email', () => {
-    sut.sendEmail(props)
+  it('should call sendEmail on the gateway when sending an email', async () => {
+    await sut.sendEmail(props)
 
     expect(mailerServiceMock.sendEmail).toHaveBeenCalled()
     expect(mailerServiceMock.sendEmail).toHaveBeenCalledWith(
