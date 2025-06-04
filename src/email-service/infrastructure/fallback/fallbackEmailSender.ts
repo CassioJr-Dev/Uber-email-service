@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Logger } from '@nestjs/common'
 import { IEmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
 import { EmailServiceUnavailableError } from '@/email-service/domain/errors/email-service-unavailable/email-service-unavailable.error'
 import { IFallbackEmailSender } from '@/email-service/adapters/fallbackSenderEmail'
