@@ -3,7 +3,6 @@ import { IEmailSenderGateway } from '@/email-service/adapters/emailSenderGateway
 import { EmailServiceUnavailableError } from '@/email-service/domain/errors/email-service-unavailable/email-service-unavailable.error'
 import { IFallbackEmailSender } from '@/email-service/adapters/fallbackSenderEmail'
 
-@Injectable()
 export class FallbackEmailSender implements IFallbackEmailSender {
   private readonly logger = new Logger(FallbackEmailSender.name)
 
