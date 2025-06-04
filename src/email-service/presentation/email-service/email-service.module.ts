@@ -5,7 +5,7 @@ import { SESEmailSender } from '@/email-service/infrastructure/ses/sesEmailSende
 import { EmailSenderService } from '@/email-service/application/service/emailSender.service'
 import { IEmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
 import { SendGridEmailSender } from '@/email-service/infrastructure/sendGrid/sendGridEmailSender'
-import sendGridMail, { MailService } from '@sendgrid/mail'
+import sendGridMail, { MailService as SendGridMailService } from '@sendgrid/mail'
 import { FallbackEmailSender } from '@/email-service/infrastructure/fallback/fallbackEmailSender'
 
 @Module({
@@ -25,7 +25,7 @@ import { FallbackEmailSender } from '@/email-service/infrastructure/fallback/fal
       },
     },
     {
-      provide: MailService,
+      provide: SendGridMailService,
       useFactory: () => {
         sendGridMail.setApiKey(process.env.SENDGRID_SECRET_ACCESS_KEY)
         return sendGridMail
