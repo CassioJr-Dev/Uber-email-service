@@ -1,11 +1,11 @@
-import { EmailSenderGateway } from '@/email-service/adapters/emailSenderGateway.adapter'
 import { EmailSenderService } from '../../emailSender.service'
 import { EmailSenderDto } from '@/email-service/dtos/email-sender.dto'
+import { IFallbackEmailSender } from '@/email-service/adapters/fallbackSenderEmail'
 
 describe('EmailSenderService unit tests', () => {
   let props: EmailSenderDto
   let sut: EmailSenderService
-  let mailerServiceMock: EmailSenderGateway
+  let mailerServiceMock: IFallbackEmailSender
 
   beforeEach(() => {
     props = {
