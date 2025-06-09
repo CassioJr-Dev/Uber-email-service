@@ -87,6 +87,15 @@ npm run start:dev
 
 Projeto desenvolvido para fins de avaliação técnica.
 
+---
+
+## 👨‍💻 Autor
+
+- Nome: _Cássio da Silva_
+- LinkedIn: _(https://www.linkedin.com/in/c%C3%A1ssio-da-silva/)_
+
+---
+
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
