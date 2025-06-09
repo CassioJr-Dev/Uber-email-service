@@ -1,97 +1,91 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Uber Email Service - Desafio Técnico Back-End
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este projeto resolve o desafio técnico de back-end proposto pela Uber, disponível em: [coding-challenge.md](https://github.com/uber-archive/coding-challenge-tools/blob/master/coding_challenge.md)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Descrição Geral
 
-## Description
+O serviço implementa uma API robusta para envio de e-mails, com arquitetura escalável, modular e tolerante a falhas, utilizando NestJS e TypeScript. O sistema é capaz de alternar automaticamente entre múltiplos provedores de e-mail (SendGrid e AWS SES), garantindo alta disponibilidade e resiliência.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Funcionalidades
 
-## Project setup
+- **Envio de e-mails**: Endpoint único para envio de e-mails, recebendo destinatário, assunto e corpo da mensagem.
+- **Fallback automático**: Caso o envio falhe em um provedor, o sistema tenta automaticamente o próximo disponível.
+- **Validação de dados**: Todos os campos do e-mail são validados (e-mail, assunto, corpo).
+- **Tratamento de erros**: Respostas claras para falhas de validação, falha total de provedores ou erros internos.
+- **Arquitetura limpa**: Separação em camadas (apresentação, aplicação, domínio, infraestrutura), facilitando manutenção e testes.
 
-```bash
-$ npm install
+## Arquitetura
+
+- **Camada de Apresentação**: Controller expõe o endpoint `/email-service` para envio de e-mails via POST.
+- **Camada de Aplicação**: Serviço orquestra o envio, delegando para o mecanismo de fallback.
+- **Domínio**: Entidades, casos de uso e regras de negócio do envio de e-mail.
+- **Infraestrutura**: Integração com provedores externos (SendGrid, SES) e mecanismo de fallback.
+
+## Endpoint
+
+### POST `/email-service`
+
+Envia um e-mail utilizando o(s) provedor(es) configurado(s).
+
+#### Exemplo de requisição:
+
+```json
+{
+  "to": "destinatario@exemplo.com",
+  "subject": "Assunto do e-mail",
+  "body": "Conteúdo do e-mail"
+}
 ```
 
-## Compile and run the project
+#### Respostas possíveis:
+
+- **201**: E-mail enviado com sucesso
+- **400**: Erro de validação dos dados
+- **500**: Falha total ao enviar o e-mail (todos os provedores falharam)
+
+## Provedores de E-mail
+
+- **SendGrid**: Integração via SDK oficial, envio de e-mails e tratamento de erros.
+- **AWS SES**: Integração via AWS SDK, envio de e-mails e tratamento de erros.
+- **Fallback**: Se um provedor falhar, o próximo é tentado automaticamente.
+
+## Validação
+
+O DTO `EmailSenderDto` garante que:
+
+- `to`: e-mail válido e não vazio
+- `subject`: string não vazia, até 255 caracteres
+- `body`: string não vazia
+
+## Testes Unitários
+
+O projeto possui testes unitários cobrindo:
+
+- Serviço de envio de e-mails (`EmailSenderService`): garante que o fallback é chamado corretamente.
+- Entidade de e-mail: valida construção e serialização.
+- Erros de domínio: valida construção e propriedades dos erros customizados.
+
+Os testes podem ser executados com:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run test
 ```
 
-## Run tests
+## Como rodar o projeto
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
+npm run start:dev
 ```
 
-## Deployment
+## Observações
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- É necessário configurar as variáveis de ambiente para os provedores de e-mail (SendGrid, SES).
+- O projeto segue princípios de Clean Architecture e SOLID.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Projeto desenvolvido para fins de avaliação técnica.
 
 ## License
 
